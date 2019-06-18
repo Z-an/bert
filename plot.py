@@ -2,12 +2,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.decomposition import PCA
+sns.set()
 
 from scipy.cluster.hierarchy import dendrogram, linkage, fcluster, inconsistent
 from scipy.cluster.hierarchy import cophenet
 from scipy.spatial.distance import pdist
-
-from bert.eval import results
 
 import numpy as np
 import pandas as pd
@@ -162,6 +161,7 @@ def plot_pc(embeds,names):
     plt.xlabel('principal component 0')
     plt.ylabel('principal component 2')
     plt.show()
+    return
     
 
 def minimal_dendrogram(*args, **kwargs):
@@ -190,29 +190,3 @@ def minimal_dendrogram(*args, **kwargs):
         if max_d:
             plt.axhline(y=max_d, c='k')
     return ddata
-
-
-def plot_metrics(names,cluster_names=['kmeans++'
-                 ,'agglomerative_l','agglomerative_m'
-                 ,'agglomerative_s','agglomerative_t']):
-
-    data = results(top_k=10,stop_at=100,names=list(names))
-
-    X = range(1,10)
-
-    plt.figure(figsize=(16,8))
-
-    for Y in cluster_names:
-        if Y=='affinity_propagation': pass
-        else:
-            sns.lineplot(y=Y,x=X,data=data[0][1],label=Y,legend='full'
-                            ).set(xlabel='top k rankings'
-                                ,ylabel='Binary ndcg @ k'
-                                ,title='Binary ndcg scores'
-                                )
-
-    plt.legend()
-    plt.show()
-
-    print(data[0][1])
-    return data[0][1]

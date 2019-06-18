@@ -2,6 +2,7 @@ from scipy.cluster.hierarchy import dendrogram, linkage, fcluster, inconsistent,
 from scipy.spatial.distance import pdist
 
 from sklearn.cluster import KMeans, SpectralClustering
+from sklearn.decomposition import PCA
 
 from plot import minimal_dendrogram, plot_clusters, plot_label_dist, plot_3d_clusters
 
@@ -9,34 +10,34 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-def agglomerative(embeds,names):
+def agglomerative(embeds,names,viz=True):
 
     l = linkage(embeds, method='complete', metric='seuclidean')
+    if viz:
+        plt.figure(figsize=(25, 10))
+        plt.title('Hierarchical Clustering Dendrogram')
+        plt.ylabel('word')
+        plt.xlabel('distance')
 
-    plt.figure(figsize=(25, 10))
-    plt.title('Hierarchical Clustering Dendrogram')
-    plt.ylabel('word')
-    plt.xlabel('distance')
+        dendrogram(
+            l,
+            leaf_rotation=90.,  # rotates the x axis labels
+            leaf_font_size=0.,  # font size for the x axis labels
+            orientation='top',
+        )
+        plt.show()
 
-    dendrogram(
-        l,
-        leaf_rotation=90.,  # rotates the x axis labels
-        leaf_font_size=0.,  # font size for the x axis labels
-        orientation='top',
-    )
-    plt.show()
-
-    minimal_dendrogram(
-        l,
-        truncate_mode='lastp',
-        p=12,
-        leaf_rotation=90.,
-        leaf_font_size=12.,
-        show_contracted=True,
-        annotate_above=10,
-        city='Sydney'
-    )
-    plt.show()
+        minimal_dendrogram(
+            l,
+            truncate_mode='lastp',
+            p=12,
+            leaf_rotation=90.,
+            leaf_font_size=12.,
+            show_contracted=True,
+            annotate_above=10,
+            city='Sydney'
+        )
+        plt.show()
 
     corr, coph_dists = cophenet(l, pdist(embeds))
     print('\nCophenetic correlation:', corr,'\n')
@@ -61,15 +62,21 @@ def kmeans(principal_components,names,embeds,viz=True):
     return kplus
 
 
-def getFlatLabels(principal_components,
-                    model,
+def getFlatLabels(model,embeds,
                     names,
                     urls,
                     large_cutoff=100,
                     medium_cutoff=75,
                     small_cutoff=50,
                     tiny_cutoff=30,
-                    viz=True):
+                    viz=False):
+    
+    pca = PCA(n_components=30)
+    principal_components = pca.fit_transform(embeds)
+
+    pca0 = principal_components[:,0]
+    pca1 = principal_components[:,1]
+    pca2 = principal_components[:,2]
 
     t_values = [('Large clusters',large_cutoff),('Medium clusters',medium_cutoff),('Small clusters',small_cutoff),('Tiny clusters',tiny_cutoff)]
 

@@ -6,8 +6,8 @@ import numpy as np
 import math
 from collections import defaultdict
 
-from bert.clustering import clusters_df_et_embeds_df
-from bert.plot import plot_metrics
+from clustering import clusters_df_et_embeds_df
+from plot import plot_metrics
 
 
 def nearest_neighbours(embeddings,from_index=None,from_name=None,names=None,to_df=True,cos=True):
@@ -163,3 +163,29 @@ def results(names,metadata_df,
     binary_results = pd.DataFrame(b_results,columns=header)
 
     return [('binary',binary_results)]
+
+
+def plot_metrics(names,cluster_names=['kmeans++'
+                 ,'agglomerative_l','agglomerative_m'
+                 ,'agglomerative_s','agglomerative_t']):
+
+    data = results(top_k=10,stop_at=100,names=list(names))
+
+    X = range(1,10)
+
+    plt.figure(figsize=(16,8))
+
+    for Y in cluster_names:
+        if Y=='affinity_propagation': pass
+        else:
+            sns.lineplot(y=Y,x=X,data=data[0][1],label=Y,legend='full'
+                            ).set(xlabel='top k rankings'
+                                ,ylabel='Binary ndcg @ k'
+                                ,title='Binary ndcg scores'
+                                )
+
+    plt.legend()
+    plt.show()
+
+    print(data[0][1])
+    return data[0][1]

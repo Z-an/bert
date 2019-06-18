@@ -2,7 +2,7 @@ import pandas as pd
 
 def zomatoPreprocess(city,cuisines=True):
 
-    zomato = pd.read_csv(city+'.csv')
+    zomato = pd.read_csv('data/{}.csv'.format(city))
     
     if cuisines:
         
