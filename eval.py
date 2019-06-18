@@ -105,7 +105,7 @@ def rank_scores(item
 
 
 def evaluate(k,metadata_df
-             ,names=names
+             ,names=None
              ,cluster_names=['kmeans++'
                  ,'agglomerative_l','agglomerative_m'
                  ,'agglomerative_s','agglomerative_t']
@@ -140,20 +140,21 @@ def evaluate(k,metadata_df
 def results(names,metadata_df,
             agglom_labels,kplus_labels,
             cluster_names=['kmeans++'
-                 ,'agglomerative_l','agglomerative_m'
-                 ,'agglomerative_s','agglomerative_t'],
-            top_k=20,stop_at=5):
+                 ,'agglomerative_l'
+                 ,'agglomerative_m'
+                 ,'agglomerative_s'
+                 ,'agglomerative_t'],
+            top_k=20,
+            stop_at=5):
 
-    n_results = []
     b_results = []
 
     for i in range(1,top_k):
         print('{} of {} iterations complete...'.format(i-1,top_k))
         binary_df = evaluate(i,metadata_df,
-                            binary=True,
                             names=list(names),
                             stop_at=stop_at,
-                            cluser_names=cluster_names
+                            cluster_names=cluster_names
                             ).drop('name',axis=1)
 
         b_results += [binary_df.apply(np.mean,axis=0).values]
