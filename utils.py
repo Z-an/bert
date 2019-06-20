@@ -1,9 +1,8 @@
 import pandas as pd
 
-def zomatoPreprocess(city,cuisines=True,full=False):
+def zomatoPreprocess(df,cuisines=True,full=False):
     
-    if full: zomato = pd.read_csv('data/{}_full.csv'.format(city))
-    else: zomato = pd.read_csv('data/{}.csv'.format(city))
+    zomato = df
     
     if cuisines:
         

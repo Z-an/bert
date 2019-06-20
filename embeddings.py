@@ -62,10 +62,10 @@ def __bagofBERTs(restaurants,average,urls,berts):
     return output
 
 
-def getEmbeddings(n_restaurants=None,average=True,city='sydney',cuisines=True,full=False):
+def getEmbeddings(df,n_restaurants=None,average=True,cuisines=True,full=False):
     
-    print('Cleaning Zomato data for {}.\n'.format(city))
-    cuisines, urls, names = zomatoPreprocess(city.lower(),cuisines=cuisines,full=full)
+    print('Cleaning Zomato data')
+    cuisines, urls, names = zomatoPreprocess(df,cuisines=cuisines,full=full)
     
     if n_restaurants == None: n_restaurants = len(cuisines)
     
